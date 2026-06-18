@@ -15,8 +15,12 @@
         <div class="card-body p-5">
             <h3 class="text-center fw-bold mb-4">Pieteikšanās</h3>
 
-            <form method="POST" action="#">
+            <form method="POST" action="{{ route('login') }}">
                 @csrf
+
+                @if ($errors->any())
+                    <div class="alert alert-danger">{{ $errors->first('email') }}</div>
+                @endif
 
                 <div class="mb-3">
                     <label for="email" class="form-label">E-pasts</label>

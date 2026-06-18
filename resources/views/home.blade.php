@@ -8,8 +8,15 @@
     <div class="container">
         <a class="navbar-brand fw-bold fs-4" href="{{ route('home') }}">Marketplace</a>
         <div class="d-flex">
-            <a href="{{ route('login') }}" class="btn btn-outline-light me-2">Pieteikties</a>
-            <a href="{{ route('register') }}" class="btn btn-primary">Reģistrēties</a>
+            @auth
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="btn btn-outline-light">Izrakstīties</button>
+                </form>
+            @else
+                <a href="{{ route('login') }}" class="btn btn-outline-light me-2">Pieteikties</a>
+                <a href="{{ route('register') }}" class="btn btn-primary">Reģistrēties</a>
+            @endauth
         </div>
     </div>
 </nav>

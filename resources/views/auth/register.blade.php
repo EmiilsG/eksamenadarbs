@@ -15,8 +15,16 @@
         <div class="card-body p-5">
             <h3 class="text-center fw-bold mb-4">Reģistrācija</h3>
 
-            <form method="POST" action="#">
+            <form method="POST" action="{{ route('register') }}">
                 @csrf
+
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        @foreach ($errors->all() as $error)
+                            <div>{{ $error }}</div>
+                        @endforeach
+                    </div>
+                @endif
 
                 <div class="mb-3">
                     <label for="name" class="form-label">Vārds</label>
