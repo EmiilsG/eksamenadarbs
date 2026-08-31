@@ -22,6 +22,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'rating',
+        'profile_image',
     ];
 
     /**
@@ -45,5 +47,42 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'reviewee_id');
+    }
+
+    public function writtenReviews()
+    {
+        return $this->hasMany(Review::class, 'reviewer_id');
+    }
+
+    public function getProfileImageUrlAttribute()
+    {
+        if ($this->profile_image) {
+            if (str_starts_with($this->profile_image, 'http')) {
+                return $this->profile_image;
+            }
+            return asset('storage/' . $this->profile_image);
+        }
+
+        return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&size=256&background=0d6efd&color=fff&bold=true';
+    }
+
+    public function getAverageRatingAttribute()
+    {
+        return round((float) $this->reviews()->avg('rating'), 1);
+    }
+
+    public function getReviewsCountAttribute()
+    {
+        return $this->reviews()->count();
     }
 }
