@@ -8,7 +8,9 @@
     <div class="container">
         <a class="navbar-brand fw-bold fs-4" href="{{ route('home') }}">Marketplace</a>
         <div class="d-flex">
+            <a href="{{ route('products.index') }}" class="btn btn-outline-light me-2">Produkti</a>
             @auth
+                <a href="{{ route('products.create') }}" class="btn btn-primary me-2">Pievienot produktu</a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="btn btn-outline-light">Izrakstīties</button>
@@ -27,7 +29,7 @@
             <div class="col-lg-7">
                 <h1 class="display-3 fw-bold mb-3">Pērc un pārdod droši</h1>
                 <p class="lead mb-4 fs-5">Mūsu platforma nodrošina drošu un uzticamu vidi preču pirkšanai un pārdošanai. Aizsargāti darījumi, pārbaudīti pārdevēji un godīgas atsauksmes.</p>
-                <a href="#" class="btn btn-light btn-lg px-4 fw-semibold">Apskatīt preces</a>
+                <a href="{{ route('products.index') }}" class="btn btn-light btn-lg px-4 fw-semibold">Apskatīt preces</a>
             </div>
         </div>
     </div>
