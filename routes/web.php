@@ -17,6 +17,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/products', [ProductController::class, 'store'])->name('products.store');
     Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/profile/{user}', [ProfileController::class, 'show'])->name('profile.user');
     Route::post('/profile/{user}/review', [ReviewController::class, 'store'])->name('reviews.store');
     Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');

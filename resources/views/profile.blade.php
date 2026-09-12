@@ -71,6 +71,10 @@
             <h2 class="fw-bold mt-4 mb-0 text-center">{{ $profileUser->name }}</h2>
             <p class="text-muted mb-2">{{ $profileUser->email }}</p>
 
+            @if ($profileUser->bio)
+                <p class="text-center mb-2" style="max-width: 480px;">{{ $profileUser->bio }}</p>
+            @endif
+
             <div class="d-flex align-items-center gap-1 mb-1">
                 @for ($i = 1; $i <= 5; $i++)
                     <span class="star {{ $i <= round($averageRating) ? '' : 'empty' }}">&#9733;</span>
@@ -79,6 +83,10 @@
                 <span class="text-muted">/ 5</span>
             </div>
             <p class="text-muted small mb-0">{{ $reviewsCount }} atsauksme(-s)</p>
+
+            @if ($isOwnProfile)
+                <a href="{{ route('profile.edit') }}" class="btn btn-outline-primary btn-sm mt-3">Rediģēt profilu</a>
+            @endif
         </div>
 
         <div class="row g-3 mb-5" style="max-width: 720px; margin: 0 auto;">
