@@ -13,6 +13,7 @@
         <div class="collapse navbar-collapse" id="mainNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item"><a class="nav-link active" href="{{ route('products.index') }}">Preces</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('favorites.index') }}">Favorīti</a></li>
             </ul>
             <div class="d-flex align-items-center">
                 @auth
@@ -101,6 +102,19 @@
                                     <div class="position-relative">
                                         <img src="{{ $product->image_url }}" class="card-img-top" alt="{{ $product->name }}" style="height: 200px; object-fit: cover;">
                                         <span class="badge bg-primary position-absolute top-0 start-0 m-2">{{ $product->category }}</span>
+                                        @auth
+                                            <form method="POST" action="{{ in_array($product->id, $favoritedIds) ? route('favorites.destroy', $product) : route('favorites.store', $product) }}" class="position-absolute top-0 end-0 m-2">
+                                                @csrf
+                                                @if (in_array($product->id, $favoritedIds))
+                                                    @method('DELETE')
+                                                @endif
+                                                <button type="submit" class="btn btn-sm {{ in_array($product->id, $favoritedIds) ? 'btn-danger' : 'btn-outline-danger bg-white' }}" title="{{ in_array($product->id, $favoritedIds) ? 'Noņemt no favorītiem' : 'Pievienot favorītiem' }}">
+                                                    &#9829;
+                                                </button>
+                                            </form>
+                                        @else
+                                            <a href="{{ route('login') }}" class="btn btn-sm btn-outline-danger bg-white position-absolute top-0 end-0 m-2" title="Piesakieties, lai pievienotu favorītiem">&#9829;</a>
+                                        @endauth
                                     </div>
                                     <div class="card-body d-flex flex-column">
                                         <h5 class="card-title fw-bold mb-1">{{ $product->name }}</h5>

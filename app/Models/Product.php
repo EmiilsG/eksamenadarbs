@@ -20,6 +20,16 @@ class Product extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class);
+    }
+
+    public function favoritedByUsers()
+    {
+        return $this->belongsToMany(User::class, 'favorites')->withTimestamps();
+    }
+
     public function getImageUrlAttribute()
     {
         if (!$this->image) {

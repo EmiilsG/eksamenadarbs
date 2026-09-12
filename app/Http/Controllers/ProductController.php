@@ -45,8 +45,9 @@ class ProductController extends Controller
 
         $products = $query->get();
         $categories = Product::select('category')->distinct()->pluck('category')->sort()->values();
+        $favoritedIds = auth()->check() ? auth()->user()->favorites()->pluck('product_id')->all() : [];
 
-        return view('products.index', compact('products', 'categories'));
+        return view('products.index', compact('products', 'categories', 'favoritedIds'));
     }
 
     public function create()

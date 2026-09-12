@@ -41,6 +41,7 @@
         <div class="collapse navbar-collapse" id="mainNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item"><a class="nav-link" href="{{ route('products.index') }}">Preces</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('favorites.index') }}">Favorīti</a></li>
             </ul>
             <div class="d-flex align-items-center">
                 @auth

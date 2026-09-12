@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReviewController;
@@ -18,6 +19,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
     Route::get('/profile/{user}', [ProfileController::class, 'show'])->name('profile.user');
     Route::post('/profile/{user}/review', [ReviewController::class, 'store'])->name('reviews.store');
+    Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
+    Route::post('/products/{product}/favorite', [FavoriteController::class, 'store'])->name('favorites.store');
+    Route::delete('/products/{product}/favorite', [FavoriteController::class, 'destroy'])->name('favorites.destroy');
 });
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');

@@ -10,6 +10,7 @@
         <div class="d-flex">
             <a href="{{ route('products.index') }}" class="btn btn-outline-light me-2">Produkti</a>
             @auth
+                <a href="{{ route('favorites.index') }}" class="btn btn-outline-light me-2">Favorīti</a>
                 <a href="{{ route('products.create') }}" class="btn btn-primary me-2">Pievienot produktu</a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
