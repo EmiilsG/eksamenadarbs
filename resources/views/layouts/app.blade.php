@@ -23,6 +23,11 @@
             border: 1px solid var(--bs-border-color);
         }
     </style>
+    <style>
+        [data-bs-theme='dark'] .bg-light { background-color: #15181c !important; }
+        [data-bs-theme='dark'] .bg-white { background-color: #1f2429 !important; }
+        [data-bs-theme='dark'] .stat-box { border-color: #343a40 !important; }
+    </style>
 </head>
 <body>
     @yield('content')
