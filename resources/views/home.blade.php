@@ -8,6 +8,7 @@
     <div class="container">
         <a class="navbar-brand fw-bold fs-4" href="{{ route('home') }}">Marketplace</a>
         <div class="d-flex">
+            <button type="button" class="btn btn-outline-light me-2" data-bs-toggle="modal" data-bs-target="#settingsModal" title="Iestatījumi" aria-label="Iestatījumi">&#9881;</button>
             <a href="{{ route('products.index') }}" class="btn btn-outline-light me-2">Produkti</a>
             @auth
                 <a href="{{ route('favorites.index') }}" class="btn btn-outline-light me-2">Favorīti</a>

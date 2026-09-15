@@ -16,6 +16,7 @@
                 <li class="nav-item"><a class="nav-link" href="{{ route('favorites.index') }}">Favorīti</a></li>
             </ul>
             <div class="d-flex align-items-center">
+                <button type="button" class="btn btn-outline-light me-2" data-bs-toggle="modal" data-bs-target="#settingsModal" title="Iestatījumi" aria-label="Iestatījumi">&#9881;</button>
                 @auth
                     <a href="{{ route('profile') }}" class="btn btn-outline-light me-2">Mans profils</a>
                     <a href="{{ route('products.create') }}" class="btn btn-primary me-2">Pievienot produktu</a>

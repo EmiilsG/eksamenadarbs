@@ -7,6 +7,9 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
     <div class="container">
         <a class="navbar-brand fw-bold fs-4" href="{{ route('home') }}">Marketplace</a>
+        <div class="d-flex align-items-center">
+            <button type="button" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#settingsModal" title="Iestatījumi" aria-label="Iestatījumi">&#9881;</button>
+        </div>
     </div>
 </nav>
 
