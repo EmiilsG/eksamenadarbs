@@ -88,6 +88,48 @@ class ProductController extends Controller
         return redirect()->route('products.index')->with('success', 'Produkts veiksmīgi pievienots!');
     }
 
+    public function edit(Product $product)
+    {
+        if ($product->user_id !== auth()->id()) {
+            abort(403, 'Jūs varat rediģēt tikai savus produktus.');
+        }
+
+        return view('products.edit', compact('product'));
+    }
+
+    public function update(Request $request, Product $product)
+    {
+        if ($product->user_id !== auth()->id()) {
+            abort(403, 'Jūs varat rediģēt tikai savus produktus.');
+        }
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'price' => 'required|numeric|min:0',
+            'category' => 'nullable|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        ]);
+
+        if ($request->hasFile('image')) {
+            if ($product->image && !str_starts_with($product->image, 'http')) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($product->image);
+            }
+
+            $product->image = $request->file('image')->store('products', 'public');
+        }
+
+        $product->update([
+            'name' => $request->name,
+            'description' => $request->description,
+            'price' => $request->price,
+            'category' => $request->category ?: 'Cita',
+            'image' => $product->image,
+        ]);
+
+        return redirect()->route('products.mine')->with('success', 'Produkts veiksmīgi atjaunināts!');
+    }
+
     public function destroy(Product $product)
     {
         if ($product->user_id !== auth()->id()) {

@@ -138,11 +138,14 @@
                                             <span class="fs-5 fw-bold text-primary">&euro;{{ number_format($product->price, 2) }}</span>
                                             @auth
                                                 @if (auth()->id() === $product->user_id)
-                                                    <form method="POST" action="{{ route('products.destroy', $product) }}" onsubmit="return confirm('Vai tiešām vēlaties dzēst šo produktu?');">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-outline-danger btn-sm">Dzēst</button>
-                                                    </form>
+                                                    <div class="d-flex gap-2">
+                                                        <a href="{{ route('products.edit', $product) }}" class="btn btn-outline-primary btn-sm">Rediģēt</a>
+                                                        <form method="POST" action="{{ route('products.destroy', $product) }}" onsubmit="return confirm('Vai tiešām vēlaties dzēst šo produktu?');">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-outline-danger btn-sm">Dzēst</button>
+                                                        </form>
+                                                    </div>
                                                 @endif
                                             @endauth
                                         </div>

@@ -65,11 +65,14 @@
                                 <p class="card-text text-muted small flex-grow-1">{{ \Illuminate\Support\Str::limit($product->description, 80) }}</p>
                                 <div class="d-flex justify-content-between align-items-center mt-2">
                                     <span class="fs-5 fw-bold text-primary">&euro;{{ number_format($product->price, 2) }}</span>
-                                    <form method="POST" action="{{ route('products.destroy', $product) }}" onsubmit="return confirm('Vai tiešām vēlaties dzēst šo produktu?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-outline-danger btn-sm">Dzēst</button>
-                                    </form>
+                                    <div class="d-flex gap-2">
+                                        <a href="{{ route('products.edit', $product) }}" class="btn btn-outline-primary btn-sm">Rediģēt</a>
+                                        <form method="POST" action="{{ route('products.destroy', $product) }}" onsubmit="return confirm('Vai tiešām vēlaties dzēst šo produktu?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-outline-danger btn-sm">Dzēst</button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
