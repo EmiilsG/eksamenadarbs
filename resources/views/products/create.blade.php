@@ -10,6 +10,7 @@
         <div class="d-flex align-items-center">
             <button type="button" class="btn btn-outline-light me-2" data-bs-toggle="modal" data-bs-target="#settingsModal" title="Iestatījumi" aria-label="Iestatījumi">&#9881;</button>
             <a href="{{ route('products.index') }}" class="btn btn-outline-light me-2">Produkti</a>
+            <a href="{{ route('products.mine') }}" class="btn btn-outline-light me-2">Mani produkti</a>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="btn btn-outline-light">Izrakstīties</button>

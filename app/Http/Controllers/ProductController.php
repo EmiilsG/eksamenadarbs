@@ -50,6 +50,13 @@ class ProductController extends Controller
         return view('products.index', compact('products', 'categories', 'favoritedIds'));
     }
 
+    public function mine()
+    {
+        $products = auth()->user()->products()->latest()->get();
+
+        return view('products.mine', compact('products'));
+    }
+
     public function create()
     {
         return view('products.create');

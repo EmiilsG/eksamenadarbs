@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Mani favorīti - Marketplace')
+@section('title', 'Mani produkti - Marketplace')
 
 @section('content')
 
@@ -13,8 +13,8 @@
         <div class="collapse navbar-collapse" id="mainNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item"><a class="nav-link" href="{{ route('products.index') }}">Preces</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ route('products.mine') }}">Mani produkti</a></li>
-                <li class="nav-item"><a class="nav-link active" href="{{ route('favorites.index') }}">Favorīti</a></li>
+                <li class="nav-item"><a class="nav-link active" href="{{ route('products.mine') }}">Mani produkti</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('favorites.index') }}">Favorīti</a></li>
             </ul>
             <div class="d-flex align-items-center">
                 <button type="button" class="btn btn-outline-light me-2" data-bs-toggle="modal" data-bs-target="#settingsModal" title="Iestatījumi" aria-label="Iestatījumi">&#9881;</button>
@@ -33,7 +33,10 @@
 
 <section class="py-5 bg-light" style="min-height: 80vh;">
     <div class="container">
-        <h1 class="fw-bold mb-1">Mani favorīti</h1>
+        <div class="d-flex justify-content-between align-items-center mb-1">
+            <h1 class="fw-bold mb-0">Mani produkti</h1>
+            <a href="{{ route('products.create') }}" class="btn btn-primary">+ Pievienot produktu</a>
+        </div>
         <p class="text-muted mb-4">{{ count($products) }} prece(-s)</p>
 
         @if (session('success'))
@@ -42,8 +45,8 @@
 
         @if ($products->isEmpty())
             <div class="text-center py-5 mt-5">
-                <p class="lead text-muted">Jums vēl nav neviena favorīta.</p>
-                <a href="{{ route('products.index') }}" class="btn btn-primary mt-2">Apskatīt preces</a>
+                <p class="lead text-muted">Jums vēl nav neviena sludinājuma.</p>
+                <a href="{{ route('products.create') }}" class="btn btn-primary mt-2">Pievienot pirmo produktu</a>
             </div>
         @else
             <div class="row g-4">
@@ -57,30 +60,17 @@
                             <div class="card-body d-flex flex-column">
                                 <h5 class="card-title fw-bold mb-1">{{ $product->name }}</h5>
                                 <div class="small text-muted mb-2">
-                                    Pārdevējs: {{ $product->user->name }}
-                                    <span class="text-warning">
-                                        @for ($i = 1; $i <= 5; $i++)
-                                            @if ($i <= round($product->user->rating))
-                                                &#9733;
-                                            @else
-                                                &#9734;
-                                            @endif
-                                        @endfor
-                                    </span>
-                                    <span class="text-muted">({{ number_format($product->user->rating, 1) }})</span>
+                                    Pievienots: {{ $product->created_at->format('d.m.Y') }}
                                 </div>
                                 <p class="card-text text-muted small flex-grow-1">{{ \Illuminate\Support\Str::limit($product->description, 80) }}</p>
                                 <div class="d-flex justify-content-between align-items-center mt-2">
                                     <span class="fs-5 fw-bold text-primary">&euro;{{ number_format($product->price, 2) }}</span>
-                                    @auth
-                                        <form method="POST" action="{{ route('favorites.destroy', $product) }}">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm">Noņemt</button>
-                                        </form>
-                                    @endauth
+                                    <form method="POST" action="{{ route('products.destroy', $product) }}" onsubmit="return confirm('Vai tiešām vēlaties dzēst šo produktu?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">Dzēst</button>
+                                    </form>
                                 </div>
-                                <a href="{{ route('products.index') }}" class="btn btn-outline-primary w-100 mt-3">Atpakaļ uz precēm</a>
                             </div>
                         </div>
                     </div>

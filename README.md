@@ -11,6 +11,7 @@ Laravel 12 tirdzniecības (marketplace) platforma ar Blade un Bootstrap 5. Lieto
   - cenas filtru (No / Līdz)
   - kārtošanu (jaunākās, lētākās, dārgākās, labāk novērtētie pārdevēji)
 - **Produktu pievienošana** (`/products/create`) — nosaukums, apraksts, cena, kategorija, bilde
+- **Mani produkti** (`/my-products`) — lietotāja paša sludinājumu pārskats ar dzēšanas iespēju
 - **Produktu dzēšana** — tikai paša lietotāja produktus var dzēst
 - **Lietotāja profils** (`/profile` un `/profile/{user}`) — vārds, e-pasts, profila bilde, vidējais vērtējums, atsauksmju skaits, sludinājumu skaits, reģistrācijas datums
 - **Pārdevēju vērtēšana** — lietotāji var novērtēt pārdevējus ar 1–5 zvaigznēm un atsauksmes tekstu (nevar novērtēt pašam sevi)
@@ -44,7 +45,7 @@ resources/views/
 ├── layout/app.blade.php
 ├── home.blade.php
 ├── profile.blade.php
-├── products/           (index = katalogs, create)
+├── products/           (index = katalogs, mine = mani produkti, create)
 └── auth/               (login, register)
 ```
 
