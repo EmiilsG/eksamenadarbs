@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Review;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -48,6 +49,45 @@ class ProductController extends Controller
         $favoritedIds = auth()->check() ? auth()->user()->favorites()->pluck('product_id')->all() : [];
 
         return view('products.index', compact('products', 'categories', 'favoritedIds'));
+    }
+
+    public function show(Request $request, Product $product)
+    {
+        $product->load('user');
+
+        $seller = $product->user;
+
+        $sellerReviews = Review::with('reviewer')
+            ->where('reviewee_id', $seller->id)
+            ->latest()
+            ->limit(3)
+            ->get();
+
+        $otherProducts = $seller->products()
+            ->where('products.id', '!=', $product->id)
+            ->latest()
+            ->limit(3)
+            ->get();
+
+        $isFavorited = $request->user()
+            ? $request->user()->favorites()->where('product_id', $product->id)->exists()
+            : false;
+
+        $sellerStats = Review::where('reviewee_id', $seller->id)
+            ->selectRaw('count(*) as total, avg(rating) as average')
+            ->first();
+
+        return view('products.show', [
+            'product' => $product,
+            'seller' => $seller,
+            'sellerReviews' => $sellerReviews,
+            'otherProducts' => $otherProducts,
+            'favoritesCount' => $product->favorites()->count(),
+            'sellerRating' => round((float) $sellerStats->average, 1),
+            'sellerReviewsCount' => (int) $sellerStats->total,
+            'sellerProductsCount' => $seller->products()->count(),
+            'isFavorited' => $isFavorited,
+        ]);
     }
 
     public function mine()

@@ -12,6 +12,7 @@ use App\Http\Controllers\Auth\RegisterController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
 Route::middleware('auth')->group(function () {
     Route::get('/my-products', [ProductController::class, 'mine'])->name('products.mine');
     Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');

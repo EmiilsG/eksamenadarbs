@@ -80,7 +80,7 @@
                                         </form>
                                     @endauth
                                 </div>
-                                <a href="{{ route('products.index') }}" class="btn btn-outline-primary w-100 mt-3">Atpakaļ uz precēm</a>
+                                <a href="{{ route('products.show', $product) }}" class="btn btn-outline-primary w-100 mt-3">Apskatīt</a>
                             </div>
                         </div>
                     </div>

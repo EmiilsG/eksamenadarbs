@@ -10,6 +10,14 @@ Laravel 12 tirdzniecības (marketplace) platforma ar Blade un Bootstrap 5. Lieto
   - kategoriju filtru
   - cenas filtru (No / Līdz)
   - kārtošanu (jaunākās, lētākās, dārgākās, labāk novērtētie pārdevēji)
+- **Produkta detaļu lapa** (`/products/{id}`) — pieejama arī viesiem, ar:
+  - lielu produkta attēlu, pilnu aprakstu, kategoriju un cenu
+  - favorīta pievienošanas/noņemšanas pogu (viesim — pieteikšanas saite)
+  - pārdevēja kartīti (attēls, vērtējums, sludinājumu skaits, saite uz profilu)
+  - pārdevēja 3 jaunākās atsauksmes ar saiti uz visām atsauksmēm
+  - citi tā paša pārdevēja produkti
+  - īpašniekam rediģēšanas un dzēšanas pogas
+  - breadcrumb ar saiti uz kategorijas filtru
 - **Produktu pievienošana** (`/products/create`) — nosaukums, apraksts, cena, kategorija, bilde
 - **Produktu rediģēšana** (`/products/{id}/edit`) — īpašnieks var mainīt nosaukumu, aprakstu, cenu, kategoriju un bildi
 - **Mani produkti** (`/my-products`) — lietotāja paša sludinājumu pārskats ar rediģēšanas un dzēšanas iespēju
@@ -46,7 +54,7 @@ resources/views/
 ├── layout/app.blade.php
 ├── home.blade.php
 ├── profile.blade.php
-├── products/           (index = katalogs, mine = mani produkti, create, edit)
+├── products/           (index = katalogs, show = detaļu lapa, mine = mani produkti, create, edit)
 └── auth/               (login, register)
 ```
 
@@ -78,6 +86,7 @@ php artisan test
 
 ## Galvenās tabulas
 
-- **users** — `id`, `name`, `email`, `password`, `rating`, `profile_image`
+- **users** — `id`, `name`, `email`, `password`, `rating`, `profile_image`, `bio`
 - **products** — `id`, `user_id`, `name`, `description`, `price`, `category`, `image`
 - **reviews** — `id`, `reviewee_id`, `reviewer_id`, `rating`, `comment`
+- **favorites** — `id`, `user_id`, `product_id` (unikāls `user_id` + `product_id`)

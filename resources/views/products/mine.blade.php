@@ -74,6 +74,7 @@
                                         </form>
                                     </div>
                                 </div>
+                                <a href="{{ route('products.show', $product) }}" class="btn btn-outline-primary w-100 mt-3">Apskatīt</a>
                             </div>
                         </div>
                     </div>
