@@ -12,14 +12,21 @@ Laravel 12 tirdzniecības (marketplace) platforma ar Blade un Bootstrap 5. Lieto
   - kārtošanu (jaunākās, lētākās, dārgākās, labāk novērtētie pārdevēji)
 - **Produkta detaļu lapa** (`/products/{id}`) — pieejama arī viesiem, ar:
   - lielu produkta attēlu, pilnu aprakstu, kategoriju un cenu
+  - attēlu galeriju — klikšķis uz miniatūru nomaina galveno attēlu
   - favorīta pievienošanas/noņemšanas pogu (viesim — pieteikšanas saite)
   - pārdevēja kartīti (attēls, vērtējums, sludinājumu skaits, saite uz profilu)
   - pārdevēja 3 jaunākās atsauksmes ar saiti uz visām atsauksmēm
   - citi tā paša pārdevēja produkti
   - īpašniekam rediģēšanas un dzēšanas pogas
   - breadcrumb ar saiti uz kategorijas filtru
-- **Produktu pievienošana** (`/products/create`) — nosaukums, apraksts, cena, kategorija, bilde
-- **Produktu rediģēšana** (`/products/{id}/edit`) — īpašnieks var mainīt nosaukumu, aprakstu, cenu, kategoriju un bildi
+- **Vairākas bildes vienam produktam** — kopā 12 attēli, lai katrs produkts būtu vizuāli atpazīstams:
+  - pievienošanas formā (`/products/create`) var augšupielādēt vairākas bildes vienlaicīgi (`images[]`)
+  - pirmais augšupielādētais attēls kļūst par galveno (kataloga, favorītu un profila kartīšu attēls)
+  - reģēšanas lapā (`/products/{id}/edit`) īpašnieks var pievienot papildu attēlus, noteikt galveno attēlu un dzēst attēlus
+  - limits — `Product::MAX_IMAGES` (6 attēli vienam produktam)
+  - attēlu faili automātiski tiek dzēsti kopā ar produktu
+- **Produktu pievienošana** (`/products/create`) — nosaukums, apraksts, cena, kategorija, bildes
+- **Produktu rediģēšana** (`/products/{id}/edit`) — īpašnieks var mainīt nosaukumu, aprakstu, cenu, kategoriju un attēlus
 - **Mani produkti** (`/my-products`) — lietotāja paša sludinājumu pārskats ar rediģēšanas un dzēšanas iespēju
 - **Produktu dzēšana** — tikai paša lietotāja produktus var dzēst
 - **Lietotāja profils** (`/profile` un `/profile/{user}`) — vārds, e-pasts, profila bilde, vidējais vērtējums, atsauksmju skaits, sludinājumu skaits, reģistrācijas datums
@@ -45,9 +52,10 @@ app/
 ├── Models/
 │   ├── User.php
 │   ├── Product.php
+│   ├── ProductImage.php
 │   └── Review.php
 database/
-├── migrations/         (users, products, reviews, u.c.)
+├── migrations/         (users, products, product_images, reviews, u.c.)
 └── seeders/
     └── ProductSeeder.php  (testa produkti, pārdevēji un atsauksmes)
 resources/views/
@@ -72,7 +80,7 @@ php artisan serve
 
 ## Testa dati
 
-`ProductSeeder` izveido 5 pārdevējus, 12 produktus un 11 atsauksmes. Pārdevēju testa konti:
+`ProductSeeder` izveido 5 pārdevējus, 12 produktus (katrs ar 4 attēliem) un 11 atsauksmes. Pārdevēju testa konti:
 
 ```
 seller1@example.com ... seller5@example.com (parole: password)
@@ -84,9 +92,12 @@ seller1@example.com ... seller5@example.com (parole: password)
 php artisan test
 ```
 
+Testi aptver autentifikāciju, katalogu, produktu CRUD, attēlu galeriju (`ProductImagesTest` — 17 testi), favorītus, profilus un atsauksmes.
+
 ## Galvenās tabulas
 
 - **users** — `id`, `name`, `email`, `password`, `rating`, `profile_image`, `bio`
-- **products** — `id`, `user_id`, `name`, `description`, `price`, `category`, `image`
+- **products** — `id`, `user_id`, `name`, `description`, `price`, `category`, `image` (`image` = galvenais attēls)
+- **product_images** — `id`, `product_id`, `path`, `position` (produkta attēli, `cascade` dzēšana)
 - **reviews** — `id`, `reviewee_id`, `reviewer_id`, `rating`, `comment`
 - **favorites** — `id`, `user_id`, `product_id` (unikāls `user_id` + `product_id`)

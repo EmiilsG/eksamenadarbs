@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\ProductImage;
 use App\Models\Review;
 use Illuminate\Http\Request;
 
@@ -53,7 +54,7 @@ class ProductController extends Controller
 
     public function show(Request $request, Product $product)
     {
-        $product->load('user');
+        $product->load('images', 'user');
 
         $seller = $product->user;
 
@@ -87,6 +88,7 @@ class ProductController extends Controller
             'sellerReviewsCount' => (int) $sellerStats->total,
             'sellerProductsCount' => $seller->products()->count(),
             'isFavorited' => $isFavorited,
+            'gallery' => $product->gallery(),
         ]);
     }
 
@@ -109,21 +111,20 @@ class ProductController extends Controller
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
             'category' => 'nullable|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-        ]);
+            'images' => 'nullable|array|max:' . Product::MAX_IMAGES,
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        ], [], ['images' => 'attēli']);
 
-        $imagePath = null;
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('products', 'public');
-        }
-
-        $request->user()->products()->create([
+        $product = $request->user()->products()->create([
             'name' => $request->name,
             'description' => $request->description,
             'price' => $request->price,
             'category' => $request->category ?: 'Cita',
-            'image' => $imagePath,
         ]);
+
+        foreach ($request->file('images', []) as $position => $file) {
+            $product->storeImage($file, $position);
+        }
 
         return redirect()->route('products.index')->with('success', 'Produkts veiksmīgi pievienots!');
     }
@@ -133,6 +134,8 @@ class ProductController extends Controller
         if ($product->user_id !== auth()->id()) {
             abort(403, 'Jūs varat rediģēt tikai savus produktus.');
         }
+
+        $product->load('images');
 
         return view('products.edit', compact('product'));
     }
@@ -148,26 +151,75 @@ class ProductController extends Controller
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
             'category' => 'nullable|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'images' => 'nullable|array|max:' . $product->remainingImageSlots(),
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        ], [
+            'images.max' => 'Produktam var būt ne vairāk par :max attēliem.',
+        ], [
+            'images' => 'attēli',
         ]);
-
-        if ($request->hasFile('image')) {
-            if ($product->image && !str_starts_with($product->image, 'http')) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($product->image);
-            }
-
-            $product->image = $request->file('image')->store('products', 'public');
-        }
 
         $product->update([
             'name' => $request->name,
             'description' => $request->description,
             'price' => $request->price,
             'category' => $request->category ?: 'Cita',
-            'image' => $product->image,
         ]);
 
+        foreach ($request->file('images', []) as $file) {
+            $product->storeImage($file);
+        }
+
         return redirect()->route('products.mine')->with('success', 'Produkts veiksmīgi atjaunināts!');
+    }
+
+    public function storeImages(Request $request, Product $product)
+    {
+        if ($product->user_id !== auth()->id()) {
+            abort(403, 'Jūs varat pievienot attēlus tikai saviem produktiem.');
+        }
+
+        $request->validate([
+            'images' => 'required|array|min:1|max:' . $product->remainingImageSlots(),
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        ], [
+            'images.required' => 'Izvēlieties vismaz vienu attēlu.',
+            'images.max' => 'Produktam var būt ne vairāk par :max attēliem.',
+        ], [
+            'images' => 'attēli',
+        ]);
+
+        foreach ($request->file('images', []) as $file) {
+            $product->storeImage($file);
+        }
+
+        return redirect()->route('products.edit', $product)->with('success', 'Attēli veiksmīgi pievienoti!');
+    }
+
+    public function destroyImage(Product $product, ProductImage $image)
+    {
+        if ($product->user_id !== auth()->id()) {
+            abort(403, 'Jūs varat dzēst attēlus tikai saviem produktiem.');
+        }
+
+        abort_unless($image->product_id === $product->id, 404);
+
+        $product->deleteImage($image);
+
+        return redirect()->route('products.edit', $product)->with('success', 'Attēls veiksmīgi dzēsts!');
+    }
+
+    public function makeMainImage(Product $product, ProductImage $image)
+    {
+        if ($product->user_id !== auth()->id()) {
+            abort(403, 'Jūs varat mainīt attēlus tikai saviem produktiem.');
+        }
+
+        abort_unless($image->product_id === $product->id, 404);
+
+        $product->makeMainImage($image);
+
+        return redirect()->route('products.edit', $product)->with('success', 'Galvenā attēla nomainīts!');
     }
 
     public function destroy(Product $product)
@@ -177,7 +229,7 @@ class ProductController extends Controller
         }
 
         if ($product->image) {
-            \Illuminate\Support\Facades\Storage::disk('public')->delete($product->image);
+            $product->deleteStoredImage($product->image);
         }
 
         $product->delete();

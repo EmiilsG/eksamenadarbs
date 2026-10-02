@@ -74,7 +74,7 @@ class ProfileEditTest extends TestCase
         Storage::fake('public');
         $user = User::factory()->create();
 
-        $file = UploadedFile::fake()->image('avatar.jpg');
+        $file = UploadedFile::fake()->create('avatar.jpg', 10, 'image/jpeg');
 
         $this->actingAs($user)->put('/profile', [
             'name' => $user->name,
@@ -92,7 +92,7 @@ class ProfileEditTest extends TestCase
         Storage::disk('public')->put('profiles/old.jpg', 'fake');
         $user = User::factory()->create(['profile_image' => 'profiles/old.jpg']);
 
-        $file = UploadedFile::fake()->image('new.jpg');
+        $file = UploadedFile::fake()->create('new.jpg', 10, 'image/jpeg');
 
         $this->actingAs($user)->put('/profile', [
             'name' => $user->name,
@@ -109,7 +109,7 @@ class ProfileEditTest extends TestCase
         Storage::fake('public');
         $user = User::factory()->create(['profile_image' => 'https://i.pravatar.cc/300?img=1']);
 
-        $file = UploadedFile::fake()->image('new.jpg');
+        $file = UploadedFile::fake()->create('new.jpg', 10, 'image/jpeg');
 
         $this->actingAs($user)->put('/profile', [
             'name' => $user->name,

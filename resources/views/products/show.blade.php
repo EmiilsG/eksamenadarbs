@@ -62,8 +62,21 @@
         <div class="row g-4">
             <div class="col-lg-7">
                 <div class="card border-0 shadow-sm overflow-hidden">
-                    <img src="{{ $product->image_url }}" class="product-image" alt="{{ $product->name }}">
+                    <img src="{{ $product->image_url }}" id="mainImage" class="product-image" alt="{{ $product->name }}">
                 </div>
+
+                @if ($gallery->count() > 1)
+                    <div class="row g-2 mt-1" id="gallery">
+                        @foreach ($gallery as $index => $url)
+                            <div class="col-3 col-sm-2">
+                                <img src="{{ $url }}" class="gallery-thumb rounded-2 border @if ($index === 0) border-primary @endif"
+                                     data-full="{{ $url }}"
+                                     alt="{{ $product->name }} attēls {{ $index + 1 }}"
+                                     style="width: 100%; height: 72px; object-fit: cover; cursor: pointer;">
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
 
                 <div class="card border-0 shadow-sm mt-4">
                     <div class="card-header bg-white py-3">
@@ -99,6 +112,7 @@
                         <div class="fs-3 fw-bold text-primary mb-1">&euro;{{ number_format($product->price, 2) }}</div>
                         <p class="text-muted small mb-3">
                             Publicēts {{ $product->created_at->format('d.m.Y') }}
+                            &middot; {{ $gallery->count() }} attēl(-i)
                             &middot; {{ $favoritesCount }} favorīt(-s)
                         </p>
 
@@ -233,5 +247,25 @@
         <p class="mb-1">&copy; {{ date('Y') }} Marketplace. Visas tiesības aizsargātas.</p>
     </div>
 </footer>
+
+@push('scripts')
+<script>
+    (function () {
+        var main = document.getElementById('mainImage');
+        var thumbs = document.querySelectorAll('.gallery-thumb');
+
+        thumbs.forEach(function (thumb) {
+            thumb.addEventListener('click', function () {
+                thumbs.forEach(function (item) {
+                    item.classList.remove('border-primary');
+                });
+
+                thumb.classList.add('border-primary');
+                main.src = thumb.dataset.full;
+            });
+        });
+    })();
+</script>
+@endpush
 
 @endsection

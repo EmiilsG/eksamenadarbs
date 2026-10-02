@@ -20,28 +20,71 @@
 </nav>
 
 <div class="d-flex align-items-center justify-content-center py-5" style="min-height: calc(100vh - 80px);">
-    <div class="card shadow-sm border-0" style="width: 520px;">
+    <div class="card shadow-sm border-0" style="width: 640px;">
         <div class="card-body p-5">
             <h3 class="text-center fw-bold mb-1">Rediģēt produktu</h3>
             <p class="text-center text-muted mb-4">Mainiet sludinājuma datus</p>
 
-            @if ($product->image && !str_starts_with($product->image, 'http'))
-                <div class="text-center mb-3">
-                    <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="rounded-3 shadow-sm" style="max-height: 160px; object-fit: cover;">
+            @if (session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+            @endif
+
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    @foreach ($errors->all() as $error)
+                        <div>{{ $error }}</div>
+                    @endforeach
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('products.update', $product) }}" enctype="multipart/form-data">
+            <h5 class="fw-bold mb-3">Attēli ({{ $product->images->count() }} / {{ \App\Models\Product::MAX_IMAGES }})</h5>
+
+            @if ($product->images->isNotEmpty())
+                <div class="row g-3 mb-4">
+                    @foreach ($product->images as $image)
+                        <div class="col-6">
+                            <div class="card h-100">
+                                <img src="{{ $image->url }}" alt="{{ $product->name }}" class="card-img-top" style="height: 120px; object-fit: cover;">
+                                <div class="card-body p-2">
+                                    @if ($image->path === $product->image)
+                                        <span class="badge bg-primary d-block text-center">Galvenais attēls</span>
+                                    @else
+                                        <form method="POST" action="{{ route('products.images.main', [$product, $image]) }}" class="mb-1">
+                                            @csrf
+                                            <button type="submit" class="btn btn-outline-primary btn-sm w-100">Par galveno</button>
+                                        </form>
+                                    @endif
+                                    <form method="POST" action="{{ route('products.images.destroy', [$product, $image]) }}" onsubmit="return confirm('Vai tiešām vēlaties dzēst šo attēlu?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-outline-danger btn-sm w-100">Dzēst</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <p class="text-muted small">Šim produktam vēl nav neviena attēla.</p>
+            @endif
+
+            @if ($product->remainingImageSlots() > 0)
+                <form method="POST" action="{{ route('products.images.store', $product) }}" enctype="multipart/form-data" class="mb-4">
+                    @csrf
+                    <label for="images" class="form-label">Pievienot attēlus (vēl {{ $product->remainingImageSlots() }} vietas)</label>
+                    <input type="file" class="form-control form-control-lg" id="images" name="images[]" accept="image/*" multiple required>
+                    <div class="form-text">Atbalstītie formāti: JPG, PNG, GIF, WEBP (maks. 2 MB katram)</div>
+                    <button type="submit" class="btn btn-outline-primary mt-2">Pievienot attēlus</button>
+                </form>
+            @else
+                <p class="text-muted small mb-4">Sasniegts maksimālais attēlu skaits ({{ \App\Models\Product::MAX_IMAGES }}).</p>
+            @endif
+
+            <h5 class="fw-bold mb-3">Produkta dati</h5>
+
+            <form method="POST" action="{{ route('products.update', $product) }}">
                 @csrf
                 @method('PUT')
-
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        @foreach ($errors->all() as $error)
-                            <div>{{ $error }}</div>
-                        @endforeach
-                    </div>
-                @endif
 
                 <div class="mb-3">
                     <label for="name" class="form-label">Nosaukums</label>
@@ -73,12 +116,6 @@
                             <option value="{{ $product->category }}" selected>{{ $product->category }}</option>
                         @endif
                     </select>
-                </div>
-
-                <div class="mb-4">
-                    <label for="image" class="form-label">Produkta bilde (pēc izvēles)</label>
-                    <input type="file" class="form-control form-control-lg" id="image" name="image" accept="image/*">
-                    <div class="form-text">Atstājiet tukšu, lai saglabātu esošo bildi. Atbalstītie formāti: JPG, PNG, GIF, WEBP (maks. 2 MB)</div>
                 </div>
 
                 <button type="submit" class="btn btn-primary btn-lg w-100">Saglabāt izmaiņas</button>

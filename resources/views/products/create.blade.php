@@ -65,9 +65,13 @@
                 </div>
 
                 <div class="mb-4">
-                    <label for="image" class="form-label">Produkta bilde (pēc izvēles)</label>
-                    <input type="file" class="form-control form-control-lg" id="image" name="image" accept="image/*">
-                    <div class="form-text">Atbalstītie formāti: JPG, PNG, GIF, WEBP (maks. 2 MB)</div>
+                    <label for="images" class="form-label">Produktu attēli (pēc izvēles)</label>
+                    <input type="file" class="form-control form-control-lg" id="images" name="images[]" accept="image/*" multiple>
+                    <div class="form-text">
+                        Maksimāli {{ \App\Models\Product::MAX_IMAGES }} attēli. Pirmais attēls tiks izmantots kā galvenais.
+                        JPG, PNG, GIF, WEBP (maks. 2 MB katram).
+                    </div>
+                    <div id="imagePreviews" class="d-flex flex-wrap gap-2 mt-3"></div>
                 </div>
 
                 <button type="submit" class="btn btn-primary btn-lg w-100">Saglabāt produktu</button>
@@ -75,5 +79,44 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    (function () {
+        var input = document.getElementById('images');
+        var previews = document.getElementById('imagePreviews');
+
+        input.addEventListener('change', function () {
+            previews.innerHTML = '';
+
+            Array.prototype.forEach.call(input.files, function (file) {
+                var wrapper = document.createElement('div');
+                wrapper.className = 'position-relative';
+
+                var img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                img.alt = file.name;
+                img.className = 'rounded-3 border';
+                img.style.width = '72px';
+                img.style.height = '72px';
+                img.style.objectFit = 'cover';
+
+                var badge = document.createElement('span');
+                badge.className = 'position-absolute top-0 end-0 badge bg-dark';
+                badge.style.opacity = '.75';
+
+                wrapper.appendChild(img);
+                wrapper.appendChild(badge);
+                previews.appendChild(wrapper);
+
+                img.addEventListener('load', function () {
+                    badge.textContent = previews.children.length === 1 ? 'Galvenais' : '';
+                    URL.revokeObjectURL(img.src);
+                });
+            });
+        });
+    })();
+</script>
+@endpush
 
 @endsection

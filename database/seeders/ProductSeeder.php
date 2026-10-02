@@ -50,7 +50,7 @@ class ProductSeeder extends Seeder
         ];
 
         foreach ($products as $i => $product) {
-            Product::firstOrCreate(
+            $created = Product::firstOrCreate(
                 ['name' => $product['name']],
                 [
                     'user_id' => $users[$i % count($users)]->id,
@@ -61,6 +61,15 @@ class ProductSeeder extends Seeder
                     'image' => 'https://picsum.photos/seed/product' . ($i + 1) . '/600/400',
                 ]
             );
+
+            foreach (range(0, 2) as $variant) {
+                $created->images()->firstOrCreate(
+                    [
+                        'path' => 'https://picsum.photos/seed/product' . ($i + 1) . '-v' . $variant . '/600/400',
+                    ],
+                    ['position' => $variant]
+                );
+            }
         }
 
         $reviews = [
