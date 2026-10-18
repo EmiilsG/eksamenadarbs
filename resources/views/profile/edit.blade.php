@@ -15,6 +15,7 @@
                 <li class="nav-item"><a class="nav-link" href="{{ route('products.index') }}">Preces</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('products.mine') }}">Mani produkti</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('favorites.index') }}">Favorīti</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('dashboard') }}">Statistika</a></li>
             </ul>
             <div class="d-flex align-items-center">
                 <button type="button" class="btn btn-outline-light me-2" data-bs-toggle="modal" data-bs-target="#settingsModal" title="Iestatījumi" aria-label="Iestatījumi">&#9881;</button>

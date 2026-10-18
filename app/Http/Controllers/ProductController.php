@@ -54,6 +54,12 @@ class ProductController extends Controller
 
     public function show(Request $request, Product $product)
     {
+        $isOwner = $request->user() && $request->user()->id === $product->user_id;
+
+        if (!$isOwner) {
+            $product->increment('views_count');
+        }
+
         $product->load('images', 'user');
 
         $seller = $product->user;
@@ -89,6 +95,7 @@ class ProductController extends Controller
             'sellerProductsCount' => $seller->products()->count(),
             'isFavorited' => $isFavorited,
             'gallery' => $product->gallery(),
+            'viewsCount' => (int) $product->views_count,
         ]);
     }
 
