@@ -16,6 +16,7 @@
                 <li class="nav-item"><a class="nav-link" href="{{ route('products.mine') }}">Mani produkti</a></li>
                 <li class="nav-item"><a class="nav-link active" href="{{ route('favorites.index') }}">Favorīti</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('dashboard') }}">Statistika</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('conversations.index') }}">Ziņojumi @if(($unreadMessagesCount ?? 0) > 0)<span class="badge bg-danger rounded-pill ms-1">{{ $unreadMessagesCount }}</span>@endif</a></li>
             </ul>
             <div class="d-flex align-items-center">
                 <button type="button" class="btn btn-outline-light me-2" data-bs-toggle="modal" data-bs-target="#settingsModal" title="Iestatījumi" aria-label="Iestatījumi">&#9881;</button>
