@@ -96,4 +96,20 @@ class User extends Authenticatable
     {
         return $this->reviews()->count();
     }
+
+    public function boughtConversations()
+    {
+        return $this->hasMany(Conversation::class, 'buyer_id');
+    }
+
+    public function soldConversations()
+    {
+        return $this->hasMany(Conversation::class, 'seller_id');
+    }
+
+    public function conversations()
+    {
+        return Conversation::where('buyer_id', $this->id)
+            ->orWhere('seller_id', $this->id);
+    }
 }

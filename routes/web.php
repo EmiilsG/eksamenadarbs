@@ -9,6 +9,8 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ConversationController;
+use App\Http\Controllers\MessageController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -35,6 +37,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/products/{product}/favorite', [FavoriteController::class, 'store'])->name('favorites.store');
     Route::delete('/products/{product}/favorite', [FavoriteController::class, 'destroy'])->name('favorites.destroy');
+    Route::get('/messages', [ConversationController::class, 'index'])->name('conversations.index');
+    Route::post('/products/{product}/message', [ConversationController::class, 'store'])->name('conversations.store');
+    Route::post('/profile/{user}/message', [ConversationController::class, 'startWithUser'])->name('conversations.start');
+    Route::get('/messages/{conversation}', [ConversationController::class, 'show'])->name('conversations.show');
+    Route::post('/messages/{conversation}/reply', [MessageController::class, 'store'])->name('messages.store');
 });
 
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');

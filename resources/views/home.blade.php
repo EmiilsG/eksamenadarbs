@@ -14,6 +14,7 @@
                 <a href="{{ route('favorites.index') }}" class="btn btn-outline-light me-2">Favorīti</a>
                 <a href="{{ route('products.mine') }}" class="btn btn-outline-light me-2">Mani produkti</a>
                 <a href="{{ route('dashboard') }}" class="btn btn-outline-light me-2">Statistika</a>
+                <a href="{{ route('conversations.index') }}" class="btn btn-outline-light me-2">Ziņojumi @if(($unreadMessagesCount ?? 0) > 0)<span class="badge bg-danger rounded-pill ms-1">{{ $unreadMessagesCount }}</span>@endif</a>
                 <a href="{{ route('products.create') }}" class="btn btn-primary me-2">Pievienot produktu</a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf

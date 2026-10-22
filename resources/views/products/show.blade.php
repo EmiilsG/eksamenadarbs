@@ -24,6 +24,7 @@
                 <li class="nav-item"><a class="nav-link" href="{{ route('products.mine') }}">Mani produkti</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('favorites.index') }}">Favorīti</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('dashboard') }}">Statistika</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('conversations.index') }}">Ziņojumi @if(($unreadMessagesCount ?? 0) > 0)<span class="badge bg-danger rounded-pill ms-1">{{ $unreadMessagesCount }}</span>@endif</a></li>
             </ul>
             <div class="d-flex align-items-center">
                 <button type="button" class="btn btn-outline-light me-2" data-bs-toggle="modal" data-bs-target="#settingsModal" title="Iestatījumi" aria-label="Iestatījumi">&#9881;</button>
@@ -128,8 +129,18 @@
                                     &#9829; {{ $isFavorited ? 'Noņemt no favorītiem' : 'Pievienot favorītiem' }}
                                 </button>
                             </form>
+
+                            @if ($product->user_id !== auth()->id())
+                                <form method="POST" action="{{ route('conversations.store', $product) }}" class="mb-2">
+                                    @csrf
+                                    <button type="submit" class="btn btn-outline-primary w-100">
+                                        &#128172; Sūtīt ziņu pārdevējam
+                                    </button>
+                                </form>
+                            @endif
                         @else
                             <a href="{{ route('login') }}" class="btn btn-outline-danger w-100 mb-2">&#9829; Pievienot favorītiem</a>
+                            <a href="{{ route('login') }}" class="btn btn-outline-primary w-100 mb-2">&#128172; Sūtīt ziņu pārdevējam</a>
                         @endauth
 
                         @auth

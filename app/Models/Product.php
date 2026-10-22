@@ -122,4 +122,9 @@ class Product extends Model
             Storage::disk('public')->delete($path);
         }
     }
+
+    public function conversations()
+    {
+        return $this->hasMany(Conversation::class);
+    }
 }
