@@ -30,6 +30,23 @@
     </style>
 </head>
 <body>
+    @auth
+        @if (! auth()->user()->hasVerifiedEmail() && ! request()->routeIs('verification.notice'))
+            <div class="alert alert-warning border-0 rounded-0 mb-0 py-2">
+                <div class="container d-flex flex-wrap align-items-center justify-content-between gap-2">
+                    <span>Jūsu e-pasts nav apstiprināts. Dažas darbības būs pieejamas pēc apstiprināšanas.</span>
+                    <div class="d-flex align-items-center gap-2">
+                        <a href="{{ route('verification.notice') }}" class="btn btn-sm btn-dark">Apstiprināt e-pastu</a>
+                        <form method="POST" action="{{ route('verification.send') }}">
+                            @csrf
+                            <button type="submit" class="btn btn-sm btn-outline-dark">Nosūtīt vēlreiz</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        @endif
+    @endauth
+
     @yield('content')
 
     <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">

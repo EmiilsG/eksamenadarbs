@@ -31,12 +31,12 @@
 
                 <div class="mb-3">
                     <label for="name" class="form-label">Vārds</label>
-                    <input type="text" class="form-control form-control-lg" id="name" name="name" required>
+                    <input type="text" class="form-control form-control-lg" id="name" name="name" value="{{ old('name') }}" required autofocus>
                 </div>
 
                 <div class="mb-3">
                     <label for="email" class="form-label">E-pasts</label>
-                    <input type="email" class="form-control form-control-lg" id="email" name="email" required>
+                    <input type="email" class="form-control form-control-lg" id="email" name="email" value="{{ old('email') }}" required>
                 </div>
 
                 <div class="mb-3">
@@ -49,7 +49,12 @@
                     <input type="password" class="form-control form-control-lg" id="password_confirmation" name="password_confirmation" required>
                 </div>
 
-                <button type="submit" class="btn btn-primary btn-lg w-100">Reģistrēties</button>
+                <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">Reģistrēties</button>
+
+                <p class="text-center mb-0">
+                    Jau ir konts?
+                    <a href="{{ route('login') }}" class="text-decoration-none fw-semibold">Pieteikties</a>
+                </p>
             </form>
         </div>
     </div>
