@@ -5,6 +5,10 @@ Laravel 12 tirdzniecības (marketplace) platforma ar Blade un Bootstrap 5. Lieto
 ## Funkcionalitāte
 
 - **Autentifikācija** — reģistrācija un pieteikšanās (Laravel session auth)
+- **E-pasta verificēšana** — pēc reģistrācijas lietotājs saņem verifikācijas saiti; līdz apstiprināšanai redzams atgādinājums, un satura veidošana ir ierobežota
+- **Paroles atiestatīšana** — "Aizmirsi paroli?" saite nosūta drošu atiestatīšanas e-pastu
+- **Aizsardzība pret pārmērīgiem pieprasījumiem** — rate limiting pieteikšanās, reģistrācijas, paroles atiestatīšanas, ziņojumu un atsauksmju darbībām
+- **Pielāgotas kļūdu lapas** — 403, 404, 419, 429, 500 un 503 ar saprotamu skaidrojumu
 - **Preču katalogs** (`/products`) — visas preces kartītēs ar:
   - meklēšanu pēc nosaukuma
   - kategoriju filtru
@@ -92,7 +96,7 @@ seller1@example.com ... seller5@example.com (parole: password)
 php artisan test
 ```
 
-Testi aptver autentifikāciju, katalogu, produktu CRUD, attēlu galeriju (`ProductImagesTest` — 17 testi), favorītus, profilus un atsauksmes.
+Testi aptver autentifikāciju, e-pasta verificēšanu, paroles atiestatīšanu, rate limiting, katalogu, produktu CRUD, attēlu galeriju (`ProductImagesTest` — 17 testi), favorītus, profilus un atsauksmes (kopā 88 testi).
 
 ## Galvenās tabulas
 

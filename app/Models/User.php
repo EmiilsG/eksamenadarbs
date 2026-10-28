@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
@@ -81,10 +81,11 @@ class User extends Authenticatable
             if (str_starts_with($this->profile_image, 'http')) {
                 return $this->profile_image;
             }
-            return asset('storage/' . $this->profile_image);
+
+            return asset('storage/'.$this->profile_image);
         }
 
-        return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&size=256&background=0d6efd&color=fff&bold=true';
+        return 'https://ui-avatars.com/api/?name='.urlencode($this->name).'&size=256&background=0d6efd&color=fff&bold=true';
     }
 
     public function getAverageRatingAttribute()

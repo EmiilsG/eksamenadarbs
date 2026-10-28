@@ -23,11 +23,12 @@ class ProductSeeder extends Seeder
         $users = [];
         foreach ($sellers as $i => $seller) {
             $users[] = User::firstOrCreate(
-                ['email' => 'seller' . ($i + 1) . '@example.com'],
+                ['email' => 'seller'.($i + 1).'@example.com'],
                 [
                     'name' => $seller['name'],
-                    'email' => 'seller' . ($i + 1) . '@example.com',
+                    'email' => 'seller'.($i + 1).'@example.com',
                     'password' => Hash::make('password'),
+                    'email_verified_at' => now(),
                     'rating' => $seller['rating'],
                     'profile_image' => $seller['image'],
                 ]
@@ -58,14 +59,14 @@ class ProductSeeder extends Seeder
                     'category' => $product['category'],
                     'description' => $product['description'],
                     'price' => $product['price'],
-                    'image' => 'https://picsum.photos/seed/product' . ($i + 1) . '/600/400',
+                    'image' => 'https://picsum.photos/seed/product'.($i + 1).'/600/400',
                 ]
             );
 
             foreach (range(0, 2) as $variant) {
                 $created->images()->firstOrCreate(
                     [
-                        'path' => 'https://picsum.photos/seed/product' . ($i + 1) . '-v' . $variant . '/600/400',
+                        'path' => 'https://picsum.photos/seed/product'.($i + 1).'-v'.$variant.'/600/400',
                     ],
                     ['position' => $variant]
                 );

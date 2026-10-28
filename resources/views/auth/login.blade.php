@@ -21,16 +21,20 @@
             <form method="POST" action="{{ route('login') }}">
                 @csrf
 
+                @if (session('status'))
+                    <div class="alert alert-success">{{ session('status') }}</div>
+                @endif
+
                 @if ($errors->any())
                     <div class="alert alert-danger">{{ $errors->first('email') }}</div>
                 @endif
 
                 <div class="mb-3">
                     <label for="email" class="form-label">E-pasts</label>
-                    <input type="email" class="form-control form-control-lg" id="email" name="email" required>
+                    <input type="email" class="form-control form-control-lg" id="email" name="email" value="{{ old('email') }}" required autofocus>
                 </div>
 
-                <div class="mb-4">
+                <div class="mb-2">
                     <label for="password" class="form-label">Parole</label>
                     <div class="input-group">
                         <input type="password" class="form-control form-control-lg" id="password" name="password" required>
@@ -38,6 +42,10 @@
                             <span id="passwordIcon">&#128065;</span>
                         </button>
                     </div>
+                </div>
+
+                <div class="text-end mb-4">
+                    <a href="{{ route('password.request') }}" class="text-decoration-none small">Aizmirsi paroli?</a>
                 </div>
 
                 <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">Pieteikties</button>
